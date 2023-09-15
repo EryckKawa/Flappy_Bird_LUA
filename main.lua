@@ -12,7 +12,12 @@ VIRTUAL_HEIGHT = 288
 
 --import de imagens
 local background = love.graphics.newImage('background.png')
+--efeito parallax
+local backgroundScroll = 0
+
 local ground = love.graphics.newImage('ground.png')
+--efeito parallax
+local groundScroll = 0
 
 function love.load()
     --aplica filtro na janela para retirar o blur dos pixels devido ao upscale da tela com a dimensão virtual
@@ -42,9 +47,9 @@ function love.draw()
     
     push:start()
 
-    love.graphics.draw(background, 0, 0)
+    love.graphics.draw(background, -backgroundScroll, 0)
 
-    love.graphics.draw(ground, 0 ,VIRTUAL_HEIGHT - 16)
+    love.graphics.draw(ground, -groundScroll,VIRTUAL_HEIGHT - 16)
 
     push:finish()
 end
