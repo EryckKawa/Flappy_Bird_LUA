@@ -1,0 +1,19 @@
+Parallax:
+Claro! Vou dar um exemplo com valores para que você possa visualizar melhor como a variável `backgroundScroll` é atualizada com o efeito parallax. Suponha que você tenha os seguintes valores:
+
+- `backgroundScroll` atual: 100
+- `BACKGROUND_SCROLL_SPEED`: 30
+- `dt` (tempo desde o último quadro): 0,0167 segundos (equivale a 60 quadros por segundo)
+- `BACKGROUND_LOOPING_POINT`: 413
+
+Aqui está como a linha de código seria executada:
+
+1. `backgroundScroll` atual é 100.
+2. `BACKGROUND_SCROLL_SPEED * dt` é calculado como 30 * 0,0167 = 0,5.
+3. Somamos o valor calculado ao `backgroundScroll` atual: 100 + 0,5 = 100,5.
+4. Agora, aplicamos o operador de módulo `%` com `BACKGROUND_LOOPING_POINT`: 100,5 % 413 = 100,5. Como 100,5 não ultrapassa o limite de 413, esse valor é mantido inalterado.
+
+Agora, `backgroundScroll` continua com o valor de 100,5. 
+No próximo quadro, o processo se repetirá, e assim por diante. 
+À medida que o tempo passa, `backgroundScroll` aumentará gradualmente, criando o efeito de deslocamento suave do plano de fundo para a esquerda.
+ Quando `backgroundScroll` atingir ou ultrapassar 413, ele será reiniciado para 0, criando o efeito de looping, dando a sensação de que o cenário se move infinitamente da direita para a esquerda.
