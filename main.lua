@@ -1,3 +1,9 @@
+--Assigment 1
+--Make pipe gaps slight random
+--make pipe intervals slighty random
+--award players a "medal" based on their score, using images
+--implemente a pause feature
+
 -- Bibliotecas necessárias
 push = require 'push' -- Biblioteca para ajustar a resolução da tela
 Class = require 'class' -- Biblioteca para criar classes
@@ -6,6 +12,8 @@ Class = require 'class' -- Biblioteca para criar classes
 require 'Bird' -- Importa a classe Bird do arquivo Bird.lua
 
 require 'Pipe' -- Importa a classe Pipe do arquivo Pipe.lua
+
+require 'PipePair'
 
 -- Dimensões da janela
 WINDOW_WIDTH = 1280
@@ -30,10 +38,12 @@ local GROUND_SCROLL_SPEED = 60
 -- Cria uma instância da classe Bird
 local bird = Bird()
 
-local pipes = {}
+local pipePairs = {}
 
 local spawnTimer = 0
 
+local lastY = -PIPE_HEIGHT + math.random(80) + 20
+ 
 function love.load()
     -- Aplica um filtro na janela para evitar o efeito de desfoque dos pixels
     -- devido ao dimensionamento da tela com a dimensão virtual
@@ -70,17 +80,27 @@ function love.update(dt)
     bird:update(dt)
 
     love.keyboard.keysPressed = {}
-
+    
     spawnTimer = spawnTimer + dt
+    
     if spawnTimer > 2 then
-        table.insert(pipes, Pipe())
+        local y = math.max(-PIPE_HEIGHT + 10, math.min(lastY + math.random(-60, 60), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
+        lastY = y
+        table.insert(pipePairs, PipePair(y))
         spawnTimer = 0
     end
+    
 
-    for k, pipe in pairs(pipes) do
-        pipe:update(dt)
-        if pipe.x < -pipe.width then
-            table.remove(pipes, k)
+    for k, pair in pairs(pipePairs) do
+        pair:update(dt)
+        if pair.x < -PIPE_WIDTH then
+            pair.remove = true
+        end
+    end
+
+    for k, pair in pairs(pipePairs) do
+        if pair.remove then
+            table.remove(pipePairs, k)
         end
     end
 end
@@ -106,8 +126,8 @@ function love.draw()
     -- Desenha o plano de fundo com efeito parallax
     love.graphics.draw(background, -backgroundScroll, 0)
 
-    for k, pipe in pairs(pipes) do
-        pipe:render()
+    for k, pair in pairs(pipePairs) do
+        pair:render()
     end
     -- Desenha o chão com efeito parallax
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
