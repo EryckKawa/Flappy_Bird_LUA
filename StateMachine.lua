@@ -1,12 +1,8 @@
--- Esta classe implementa uma máquina de estados finitos (FSM).
 StateMachine = Class{}
 
--- O construtor da classe inicializa as seguintes propriedades:
---
--- * `self.empty`: um estado vazio, que é usado quando a FSM não está em nenhum estado.
--- * `self.states`: uma tabela de estados, que mapeia nomes de estados para funções que criam instâncias dos estados.
--- * `self.current`: o estado atual da FSM.
+-- Inicializa a máquina de estados
 function StateMachine:init(states)
+    -- Estado vazio padrão com funções vazias para renderização, atualização, entrada e saída
     self.empty = {
         render = function() end,
         update = function() end,
@@ -14,26 +10,32 @@ function StateMachine:init(states)
         exit = function() end
     }
 
+    -- Tabela de estados definidos
     self.states = states or {}
+
+    -- Estado atual, inicializado como o estado vazio padrão
     self.current = self.empty
 end
 
--- Este método transita a FSM para o estado especificado pelo parâmetro `stateName`.
--- O método também passa os parâmetros `enterParams` para o método `enter()` do novo estado.
+-- Função para mudar o estado atual para um novo estado
 function StateMachine:change(stateName, enterParams)
-    --Garante que deva existir um estado válido
+    -- Garante que o estado especificado existe na tabela de estados
     assert(self.states[stateName])
+
+    -- Chama a função de saída do estado atual
     self.current:exit()
+
+    -- Define o estado atual como o novo estado especificado e chama a função de entrada
     self.current = self.states[stateName]()
-    self.current:enter(enterParams) 
+    self.current:enter(enterParams)
 end
 
--- Este método atualiza o estado atual da FSM.
-function StateMachine:update()
+-- Função de atualização, chama a função de atualização do estado atual
+function StateMachine:update(dt)
     self.current:update(dt)
 end
 
--- Este método renderiza o estado atual da FSM.
+-- Função de renderização, chama a função de renderização do estado atual
 function StateMachine:render()
     self.current:render()
 end
