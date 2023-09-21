@@ -2,7 +2,7 @@
 Pipe = Class {}
 
 -- Carregamento da Imagem do Tubo
-local PIPE_IMAGE = love.graphics.newImage('assets/pipe.png')
+local PIPE_IMAGE = love.graphics.newImage("assets/pipe.png")
 
 -- Velocidade de Deslocamento, Altura e Largura do Tubo
 PIPE_SPEED = 60
@@ -27,14 +27,18 @@ end
 
 -- Atualização do Tubo
 function Pipe:update(dt)
-    
 end
 
 -- Renderização do Tubo
 function Pipe:render()
     -- Desenha o tubo na tela. A posição Y é ajustada com base na orientação do tubo.
     -- Se for um tubo superior, a posição Y é invertida para que ele pareça estar pendurado no teto.
-    love.graphics.draw(PIPE_IMAGE, self.x, 
-    (self.orientation == 'top' and self.y + PIPE_HEIGHT or self.y), 
-    0, 1, self.orientation == 'top' and -1 or 1)
+    love.graphics.draw(
+        PIPE_IMAGE,
+        self.x,
+        (self.orientation == "top" and self.y + PIPE_HEIGHT or self.y),
+        0,
+        1,
+        self.orientation == "top" and -1 or 1
+    )
 end

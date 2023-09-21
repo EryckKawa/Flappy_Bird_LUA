@@ -1,13 +1,17 @@
-StateMachine = Class{}
+StateMachine = Class {}
 
 -- Inicializa a máquina de estados
 function StateMachine:init(states)
     -- Estado vazio padrão com funções vazias para renderização, atualização, entrada e saída
     self.empty = {
-        render = function() end,
-        update = function() end,
-        enter = function() end,
-        exit = function() end
+        render = function()
+        end,
+        update = function()
+        end,
+        enter = function()
+        end,
+        exit = function()
+        end
     }
 
     -- Tabela de estados definidos
