@@ -5,60 +5,74 @@
 --implemente a pause feature
 
 -- Bibliotecas necessárias
-push = require 'push' -- Biblioteca para ajustar a resolução da tela
-Class = require 'class' -- Biblioteca para criar classes
+push = require 'push' 
+Class = require 'class' 
 
--- Classes personalizadas
-require 'Bird' -- Importa a classe Bird do arquivo Bird.lua
+require 'StateMachine'
+require 'states/BaseState'
+require 'states/CountdownState'
+require 'states/PlayState'
+require 'states/ScoreState'
+require 'states/TitleScreenState'
 
-require 'Pipe' -- Importa a classe Pipe do arquivo Pipe.lua
 
+
+require 'Bird' 
+require 'Pipe' 
 require 'PipePair'
 
--- Dimensões da janela
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
 
--- Importa as imagens do plano de fundo e do chão
 local background = love.graphics.newImage('assets/background.png')
 local ground = love.graphics.newImage('assets/ground.png')
 
--- Efeito parallax para o plano de fundo
 local backgroundScroll = 0
 local BACKGROUND_SCROLL_SPEED = 30
 local BACKGROUND_LOOPING_POINT = 413
 
--- Efeito parallax para o chão
+
 local groundScroll = 0
 local GROUND_SCROLL_SPEED = 60
 
--- Cria uma instância da classe Bird
-local bird = Bird()
-
-local pipePairs = {}
-
-local spawnTimer = 0
-
-local lastY = -PIPE_HEIGHT + math.random(80) + 20
+scrolling = true
  
 function love.load()
-    -- Aplica um filtro na janela para evitar o efeito de desfoque dos pixels
-    -- devido ao dimensionamento da tela com a dimensão virtual
+    
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    -- Define o título da janela
-    love.window.setTitle('Flappppppyyyyyyyy Bird')
+    math.randomseed(os.time())
+
+    love.window.setTitle('Twitterry Bird')
     
-    -- Configura a tela usando a biblioteca push
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,{
-        fullscreen = false, -- Janela não é em tela cheia
-        vsync = true,       -- VSync ativado para evitar screen tearing
-        resizable = true    -- A janela pode ser redimensionada
+        fullscreen = false, 
+        vsync = true,       
+        resizable = true    
     })
 
+    smallFont = love.graphics.newFont('assets/font.tff', 8)
+    mediumFont = love.graphics.newFont('assets/flappy.tff', 14)
+    flappyFont = love.graphics.newFont('assets/flappy.tff', 28)
+    hugeFont = love.graphics.newFont('assets/flappy.tff', 56)
+
+    love.graphics.setFont(flappyFont)
+
+    sounds = {
+        ['jump'] = love.audio.newSource('sounds/jump.wav', 'static')
+        ['explosion'] = love.audio.newSource('sounds/explosion.wav', 'static')
+        ['hurt'] = love.audio.newSource('sounds/hurt.wav', 'static')
+        ['score'] = love.audio.newSource('sounds/score.wav', 'static')
+
+        ['music'] = love.audio.newSource('sounds/marios_way.wav', 'static')
+    }
+
+    sounds['music']:setLooping(true)
+    sounds['music']:play()
+    
     love.keyboard.keysPressed = {}
 
 end
