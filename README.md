@@ -33,7 +33,7 @@ To play Twitterry Bird, you'll need enter itch.io and donwload the game:
 - Pass through the gaps in the pipes to earn points.
 - Try to achieve the highest score possible.
 
-##Contributing
+## Contributing
 
 Contributions to this project are welcome. If you'd like to contribute, please follow these steps:
 
