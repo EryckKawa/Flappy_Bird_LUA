@@ -3,12 +3,14 @@ PipePair = Class {} -- Declaração da Classe PipePair
 local GAP_HEIGHT = 100 -- Altura do espaço (espaço entre os canos)
 
 function PipePair:init(y)
-    self.x = VIRTUAL_WIDTH -- Define a posição inicial horizontal do par de canos fora da tela à direita
+    self.score = false
+
+    self.x = VIRTUAL_WIDTH + 32-- Define a posição inicial horizontal do par de canos fora da tela à direita
     self.y = y -- Define a posição vertical do par de canos com base no argumento 'y' passado ao inicializar
 
     self.pipes = {
         ["upper"] = Pipe("top", self.y), -- Cria um cano superior, posicionando-o na coordenada 'y'
-        ["lower"] = Pipe("bottom", self.y + PIPE_HEIGHT + GAP_HEIGHT) -- Cria um cano inferior, posicionando-o abaixo do cano superior com um espaço 'GAP_HEIGHT'
+        ["lower"] = Pipe("bottom", self.y + PIPE_HEIGHT + 100 + math.random(-15, 15)) -- Cria um cano inferior, posicionando-o abaixo do cano superior com um espaço 'GAP_HEIGHT'
     }
 
     self.remove = false -- Inicializa a variável 'remove' como falsa (será definida como verdadeira quando o par de canos sair da tela)

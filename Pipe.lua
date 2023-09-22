@@ -12,12 +12,12 @@ PIPE_WIDTH = 70
 -- Inicialização da Instância de Tubo
 function Pipe:init(orientation, y)
     -- Define a posição inicial horizontal do tubo fora da tela à direita
-    self.x = VIRTUAL_WIDTH
+    self.x = VIRTUAL_WIDTH + 64 
     -- Define a posição vertical do cano
     self.y = y
 
     -- Obtém a largura da imagem do tubo e a armazena na variável self.width (usada para detecção de colisão)
-    self.width = PIPE_IMAGE:getWidth()
+    self.width = PIPE_WIDTH
     --Altura definida nas constantes
     self.height = PIPE_HEIGHT
 

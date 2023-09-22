@@ -9,7 +9,7 @@ require "states/CountdownState"
 require "states/PlayState"
 require "states/ScoreState"
 require "states/TitleScreenState"
-
+require "states/PauseState"
 -- Importação de classes personalizadas
 require "Bird"
 require "Pipe"
@@ -18,8 +18,8 @@ require "PipePair"
 -- Dimensões da janela
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
-
-VIRTUAL_WIDTH = 512
+--Coloquei outra largura pra corrigir um bug visual :c
+VIRTUAL_WIDTH = 550
 VIRTUAL_HEIGHT = 288
 
 -- Carrega imagens de fundo e chão
@@ -51,6 +51,30 @@ function love.load()
     -- Define o título da janela
     love.window.setTitle("Twitterry Bird")
 
+    
+    -- Carrega diferentes tamanhos de fonte
+    smallFont = love.graphics.newFont("assets/font.ttf", 8)
+    mediumFont = love.graphics.newFont("assets/flappy.ttf", 14)
+    flappyFont = love.graphics.newFont("assets/flappy.ttf", 28)
+    hugeFont = love.graphics.newFont("assets/flappy.ttf", 56)
+    
+    -- Define a fonte padrão
+    love.graphics.setFont(flappyFont)
+
+    -- Carrega os sons do jogo
+    sounds = {
+        ["jump"] = love.audio.newSource("sounds/jump.wav", "static"),
+        ["explosion"] = love.audio.newSource("sounds/explosion.wav", "static"),
+        ["hurt"] = love.audio.newSource("sounds/hurt.wav", "static"),
+        ["score"] = love.audio.newSource("sounds/score.wav", "static"),
+        ["music"] = love.audio.newSource("sounds/marios_way.mp3", "static")
+    }
+    
+    -- Configura a música para repetição contínua e define o volume
+    sounds["music"]:setLooping(true)
+    sounds["music"]:setVolume(desiredVolume)
+    sounds["music"]:play()
+    
     -- Configura a tela usando a biblioteca push
     push:setupScreen(
         VIRTUAL_WIDTH,
@@ -64,32 +88,9 @@ function love.load()
         }
     )
 
-    -- Carrega diferentes tamanhos de fonte
-    smallFont = love.graphics.newFont("assets/font.ttf", 8)
-    mediumFont = love.graphics.newFont("assets/flappy.ttf", 14)
-    flappyFont = love.graphics.newFont("assets/flappy.ttf", 28)
-    hugeFont = love.graphics.newFont("assets/flappy.ttf", 56)
-
-    -- Define a fonte padrão
-    love.graphics.setFont(flappyFont)
-
-    -- Carrega os sons do jogo
-    sounds = {
-        ["jump"] = love.audio.newSource("sounds/jump.wav", "static"),
-        ["explosion"] = love.audio.newSource("sounds/explosion.wav", "static"),
-        ["hurt"] = love.audio.newSource("sounds/hurt.wav", "static"),
-        ["score"] = love.audio.newSource("sounds/score.wav", "static"),
-        ["music"] = love.audio.newSource("sounds/marios_way.mp3", "static")
-    }
-
-    -- Configura a música para repetição contínua e define o volume
-    sounds["music"]:setLooping(true)
-    sounds["music"]:setVolume(desiredVolume)
-    sounds["music"]:play()
-
     -- Cria uma máquina de estados para gerenciar o jogo
     gStateMachine =
-        StateMachine {
+    StateMachine {
         ["title"] = function()
             return TitleScreenState()
         end,
@@ -101,6 +102,9 @@ function love.load()
         end,
         ["score"] = function()
             return ScoreState()
+        end,
+        ["pause"] = function()
+            return PauseState()
         end
     }
     
@@ -111,6 +115,11 @@ function love.load()
     love.keyboard.keysPressed = {}
 end
 
+function love.resize(w, h)
+    -- Atualiza o redimensionamento da tela usando a biblioteca push
+    push:resize(w, h)
+end
+
 function love.keyboard.wasPressed(key)
     if love.keyboard.keysPressed[key] then
         return true
@@ -118,6 +127,7 @@ function love.keyboard.wasPressed(key)
         return false
     end
 end
+
 
 function love.update(dt)
     -- Atualiza o deslocamento do plano de fundo e do chão com base no tempo decorrido
@@ -133,10 +143,6 @@ function love.update(dt)
     love.keyboard.keysPressed = {}
 end
 
-function love.resize(w, h)
-    -- Atualiza o redimensionamento da tela usando a biblioteca push
-    push:resize(w, h)
-end
 
 function love.keypressed(key)
     -- Fecha o jogo se a tecla Esc for pressionada

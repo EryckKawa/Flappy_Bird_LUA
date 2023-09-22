@@ -13,44 +13,24 @@ function PlayState:init()
     self.pipePairs = {}               -- Inicializa uma tabela para armazenar os pares de canos
     self.timer = 0                    -- Inicializa um temporizador para gerar pares de canos
     self.score = 0                   -- Inicializa a pontuação do jogador
+    self.gap = 2
     self.lastY = -PIPE_HEIGHT + math.random(80) + 20 -- Inicializa a posição vertical do último par de canos gerado
 end
 
 function PlayState:update(dt)
     -- Atualiza o temporizador
     self.timer = self.timer + dt
-
+    
     -- Gera novos pares de canos a cada 2 segundos
-    if self.timer > 2 then
+    if self.timer > self.gap then
         local y = math.max(-PIPE_HEIGHT + 10, math.min(self.lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
         self.lastY = y
         table.insert(self.pipePairs, PipePair(y)) -- Cria e adiciona um novo par de canos à tabela
+        self.gap = 2 + math.random(-10, 10)/20
+        
         self.timer = 0
     end
-
-    -- Remove pares de canos que estão fora da tela
-    for k, pair in pairs(self.pipePairs) do
-        if pair.remove then
-            table.remove(self.pipePairs, k)
-        end
-    end
-
-    -- Verifica colisões entre o pássaro e os canos
-    for k, pair in pairs(self.pipePairs) do
-        for l, pipe in pairs(pair.pipes) do
-            if self.bird:collides(pipe) then
-                -- Toca o som de explosão e de dano
-                sounds["explosion"]:setVolume(desiredVolume)
-                sounds["explosion"]:play()
-                sounds["hurt"]:setVolume(desiredVolume)
-                sounds["hurt"]:play()
-
-                -- Muda o estado para o estado de pontuação com a pontuação atual
-                gStateMachine:change("score", {score = self.score})
-            end
-        end
-    end
-
+    
     -- Verifica se o pássaro passou pelos canos para marcar pontos
     for k, pair in pairs(self.pipePairs) do
         if not pair.scored then
@@ -63,6 +43,29 @@ function PlayState:update(dt)
 
         pair:update(dt) -- Atualiza o par de canos
     end
+    
+    -- Verifica colisões entre o pássaro e os canos
+    for k, pair in pairs(self.pipePairs) do
+        for l, pipe in pairs(pair.pipes) do
+            if self.bird:collides(pipe) then
+                -- Toca o som de explosão e de dano
+                sounds["explosion"]:setVolume(desiredVolume)
+                sounds["explosion"]:play()
+                sounds["hurt"]:setVolume(desiredVolume)
+                sounds["hurt"]:play()
+                
+                -- Muda o estado para o estado de pontuação com a pontuação atual
+                gStateMachine:change("score", {score = self.score})
+            end
+        end
+    end
+    -- Remove pares de canos que estão fora da tela
+    for k, pair in pairs(self.pipePairs) do
+        if pair.remove then
+            table.remove(self.pipePairs, k)
+        end
+    end
+
 
     self.bird:update(dt) -- Atualiza o pássaro
 
@@ -76,6 +79,10 @@ function PlayState:update(dt)
 
         -- Muda o estado para o estado de pontuação com a pontuação atual
         gStateMachine:change("score", {score = self.score})
+    end
+
+    if love.keyboard.wasPressed('p') then
+        gStateMachine:change('pause')
     end
 end
 
