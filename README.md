@@ -34,6 +34,7 @@ To play Twitterry Bird, you'll need enter itch.io and donwload the game:
 - Try to achieve the highest score possible.
 
 ##Contributing
+
 Contributions to this project are welcome. If you'd like to contribute, please follow these steps:
 
 - Fork the repository on GitHub.
