@@ -9,7 +9,7 @@ require "states/CountdownState"
 require "states/PlayState"
 require "states/ScoreState"
 require "states/TitleScreenState"
-require "states/PauseState"
+
 -- Importação de classes personalizadas
 require "Bird"
 require "Pipe"
@@ -25,6 +25,11 @@ VIRTUAL_HEIGHT = 288
 -- Carrega imagens de fundo e chão
 local background = love.graphics.newImage("assets/background.png")
 local ground = love.graphics.newImage("assets/ground.png")
+
+--Carrega medalhas
+bronze = love.graphics.newImage("assets/bronze.png")
+silver = love.graphics.newImage("assets/silver.png")
+gold = love.graphics.newImage("assets/gold.png")
 
 -- Configuração do efeito parallax para o plano de fundo
 local backgroundScroll = 0
@@ -53,10 +58,10 @@ function love.load()
 
     
     -- Carrega diferentes tamanhos de fonte
-    smallFont = love.graphics.newFont("assets/font.ttf", 8)
-    mediumFont = love.graphics.newFont("assets/flappy.ttf", 14)
-    flappyFont = love.graphics.newFont("assets/flappy.ttf", 28)
-    hugeFont = love.graphics.newFont("assets/flappy.ttf", 56)
+    smallFont = love.graphics.newFont("fonts/font.ttf", 8)
+    mediumFont = love.graphics.newFont("fonts/flappy.ttf", 14)
+    flappyFont = love.graphics.newFont("fonts/flappy.ttf", 28)
+    hugeFont = love.graphics.newFont("fonts/flappy.ttf", 56)
     
     -- Define a fonte padrão
     love.graphics.setFont(flappyFont)
@@ -103,9 +108,6 @@ function love.load()
         ["score"] = function()
             return ScoreState()
         end,
-        ["pause"] = function()
-            return PauseState()
-        end
     }
     
     -- Inicializa o estado do jogo com o estado do título

@@ -13,7 +13,7 @@ function PlayState:init()
     self.pipePairs = {}               -- Inicializa uma tabela para armazenar os pares de canos
     self.timer = 0                    -- Inicializa um temporizador para gerar pares de canos
     self.score = 0                   -- Inicializa a pontuação do jogador
-    self.gap = 2
+    self.gap = 2                     -- Inicializa um temporizador para contar a distância entre os canos
     self.lastY = -PIPE_HEIGHT + math.random(80) + 20 -- Inicializa a posição vertical do último par de canos gerado
 end
 
@@ -26,8 +26,7 @@ function PlayState:update(dt)
         local y = math.max(-PIPE_HEIGHT + 10, math.min(self.lastY + math.random(-20, 20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
         self.lastY = y
         table.insert(self.pipePairs, PipePair(y)) -- Cria e adiciona um novo par de canos à tabela
-        self.gap = 2 + math.random(-10, 10)/20
-        
+        self.gap = 2 + math.random(-0.5, 0.5)
         self.timer = 0
     end
     
@@ -42,6 +41,7 @@ function PlayState:update(dt)
         end
 
         pair:update(dt) -- Atualiza o par de canos
+
     end
     
     -- Verifica colisões entre o pássaro e os canos
@@ -81,9 +81,6 @@ function PlayState:update(dt)
         gStateMachine:change("score", {score = self.score})
     end
 
-    if love.keyboard.wasPressed('p') then
-        gStateMachine:change('pause')
-    end
 end
 
 function PlayState:render()
@@ -99,8 +96,15 @@ function PlayState:render()
     self.bird:render() -- Renderiza o pássaro
 end
 
-function PlayState:enter()
+function PlayState:enter(params)
     scrolling = true -- Inicia o deslocamento do cenário
+    if params then
+        self.bird = params.bird
+        self.pipePairs = params.pipePairs
+        self.timer = params.timer
+        self.score = params.score
+        self.lastY = params.lastY
+    end
 end
 
 function PlayState:exit()
