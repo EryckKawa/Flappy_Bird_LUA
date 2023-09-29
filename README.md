@@ -27,6 +27,8 @@ Twitterry Bird is a fun and addictive game where you control a bird and try to n
 
 To play Twitterry Bird, you'll need enter itch.io and donwload the game:
 
+https://eryckkawa.itch.io/twittery-bird
+
 ## How to Play
 - Press the Spacebar to make the bird jump.
 - Avoid colliding with the pipes and the ground.
