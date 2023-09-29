@@ -34,6 +34,7 @@ https://eryckkawa.itch.io/twittery-bird
 - Avoid colliding with the pipes and the ground.
 - Pass through the gaps in the pipes to earn points.
 - Try to achieve the highest score possible.
+- Press "P" to pause.
 
 ## Contributing
 
