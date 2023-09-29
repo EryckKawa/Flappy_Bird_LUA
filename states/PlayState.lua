@@ -118,6 +118,10 @@ function PlayState:render()
     -- Define a fonte para exibir a pontuação
     love.graphics.setFont(flappyFont)
     love.graphics.print("Score: " .. tostring(self.score), 8, 8)
+    -- Define a fonte e o texto para exibir o botão de pause
+    love.graphics.setFont(mediumFont)
+    love.graphics.print("Press P to pause", 420, 8)
+
 
     self.bird:render() -- Renderiza o pássaro
 end
