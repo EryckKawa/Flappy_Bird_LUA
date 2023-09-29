@@ -9,6 +9,7 @@ require "states/CountdownState"
 require "states/PlayState"
 require "states/ScoreState"
 require "states/TitleScreenState"
+require "states/PauseState"
 
 -- Importação de classes personalizadas
 require "Bird"
@@ -108,6 +109,9 @@ function love.load()
         ["score"] = function()
             return ScoreState()
         end,
+        ["pause"] = function()
+            return PauseState()
+        end
     }
     
     -- Inicializa o estado do jogo com o estado do título
